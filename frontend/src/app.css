@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+	--color-primary: oklch(0.6 0.2 250);
+	--color-primary-foreground: oklch(0.98 0 0);
+	--nav-height: 4rem;
+	--sidebar-width: 18rem;
+	--header-height: 3.5rem;
+}
