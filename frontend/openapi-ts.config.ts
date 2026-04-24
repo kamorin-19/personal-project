@@ -6,5 +6,5 @@ export default defineConfig({
 		path: 'src/lib/api/generated',
 		format: 'prettier'
 	},
-	client: 'fetch'
+	client: '@hey-api/client-fetch'
 });

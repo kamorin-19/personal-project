@@ -9,6 +9,8 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"moduleResolution": "bundler"
-	}
+		"moduleResolution": "bundler",
+		"types": ["vitest/globals", "@testing-library/jest-dom"]
+	},
+	"exclude": ["src/lib/api/generated"]
 }
