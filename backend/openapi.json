@@ -201,6 +201,116 @@
         }
       }
     },
+    "/workout/exercise": {
+      "get": {
+        "tags": [
+          "workout"
+        ],
+        "summary": "List Exercises",
+        "operationId": "list_exercises_workout_exercise_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseListResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "workout"
+        ],
+        "summary": "Create Exercise",
+        "operationId": "create_exercise_workout_exercise_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExerciseCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/workout/exercise/{exercise_id}": {
+      "delete": {
+        "tags": [
+          "workout"
+        ],
+        "summary": "Delete Exercise",
+        "operationId": "delete_exercise_workout_exercise__exercise_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Exercise Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
@@ -226,6 +336,97 @@
   },
   "components": {
     "schemas": {
+      "ExerciseCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "muscle_group": {
+            "$ref": "#/components/schemas/MuscleGroup"
+          },
+          "calories_per_rep_per_kg": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Calories Per Rep Per Kg"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "muscle_group"
+        ],
+        "title": "ExerciseCreate"
+      },
+      "ExerciseListResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ExerciseResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "ExerciseListResponse"
+      },
+      "ExerciseResponse": {
+        "properties": {
+          "exercise_id": {
+            "type": "string",
+            "title": "Exercise Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "muscle_group": {
+            "$ref": "#/components/schemas/MuscleGroup"
+          },
+          "calories_per_rep_per_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Calories Per Rep Per Kg"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "exercise_id",
+          "name",
+          "muscle_group",
+          "calories_per_rep_per_kg",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ExerciseResponse"
+      },
       "GoogleCallbackRequest": {
         "properties": {
           "code": {
@@ -256,6 +457,19 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "MuscleGroup": {
+        "type": "string",
+        "enum": [
+          "chest",
+          "back",
+          "shoulder",
+          "arm",
+          "abdomen",
+          "leg",
+          "other"
+        ],
+        "title": "MuscleGroup"
       },
       "TokenResponse": {
         "properties": {

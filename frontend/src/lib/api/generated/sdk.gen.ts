@@ -18,6 +18,14 @@ import type {
   DeleteWeightWorkoutWeightRecordDateDeleteData,
   DeleteWeightWorkoutWeightRecordDateDeleteError,
   DeleteWeightWorkoutWeightRecordDateDeleteResponse,
+  ListExercisesWorkoutExerciseGetError,
+  ListExercisesWorkoutExerciseGetResponse,
+  CreateExerciseWorkoutExercisePostData,
+  CreateExerciseWorkoutExercisePostError,
+  CreateExerciseWorkoutExercisePostResponse,
+  DeleteExerciseWorkoutExerciseExerciseIdDeleteData,
+  DeleteExerciseWorkoutExerciseExerciseIdDeleteError,
+  DeleteExerciseWorkoutExerciseExerciseIdDeleteResponse,
   HealthHealthGetError,
   HealthHealthGetResponse,
 } from "./types.gen";
@@ -99,6 +107,66 @@ export const deleteWeightWorkoutWeightRecordDateDelete = <
   >({
     ...options,
     url: "/workout/weight/{record_date}",
+  });
+};
+
+/**
+ * List Exercises
+ */
+export const listExercisesWorkoutExerciseGet = <
+  ThrowOnError extends boolean = false,
+>(
+  options?: OptionsLegacyParser<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    ListExercisesWorkoutExerciseGetResponse,
+    ListExercisesWorkoutExerciseGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/workout/exercise",
+  });
+};
+
+/**
+ * Create Exercise
+ */
+export const createExerciseWorkoutExercisePost = <
+  ThrowOnError extends boolean = false,
+>(
+  options: OptionsLegacyParser<
+    CreateExerciseWorkoutExercisePostData,
+    ThrowOnError
+  >,
+) => {
+  return (options?.client ?? client).post<
+    CreateExerciseWorkoutExercisePostResponse,
+    CreateExerciseWorkoutExercisePostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/workout/exercise",
+  });
+};
+
+/**
+ * Delete Exercise
+ */
+export const deleteExerciseWorkoutExerciseExerciseIdDelete = <
+  ThrowOnError extends boolean = false,
+>(
+  options: OptionsLegacyParser<
+    DeleteExerciseWorkoutExerciseExerciseIdDeleteData,
+    ThrowOnError
+  >,
+) => {
+  return (options?.client ?? client).delete<
+    DeleteExerciseWorkoutExerciseExerciseIdDeleteResponse,
+    DeleteExerciseWorkoutExerciseExerciseIdDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/workout/exercise/{exercise_id}",
   });
 };
 

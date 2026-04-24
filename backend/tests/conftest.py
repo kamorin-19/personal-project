@@ -27,6 +27,25 @@ SAMPLE_DYNAMO_ITEM_NO_FAT = {
     "updatedAt": "2026-04-24T00:00:00+00:00",
 }
 
+SAMPLE_EXERCISE_ITEM = {
+    "userId": "user-001",
+    "exerciseId": "ex-uuid-001",
+    "name": "ベンチプレス",
+    "muscleGroup": "chest",
+    "caloriesPerRepPerKg": Decimal("0.050"),
+    "createdAt": "2026-04-25T00:00:00+00:00",
+    "updatedAt": "2026-04-25T00:00:00+00:00",
+}
+
+SAMPLE_EXERCISE_ITEM_NO_CALORIES = {
+    "userId": "user-001",
+    "exerciseId": "ex-uuid-002",
+    "name": "スクワット",
+    "muscleGroup": "leg",
+    "createdAt": "2026-04-25T00:00:00+00:00",
+    "updatedAt": "2026-04-25T00:00:00+00:00",
+}
+
 
 @pytest.fixture
 def mock_table() -> AsyncMock:
