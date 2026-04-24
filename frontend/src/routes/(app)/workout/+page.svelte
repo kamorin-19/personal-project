@@ -8,13 +8,65 @@
 		<p class="mt-1 text-sm text-gray-500">トレーニング記録・メニュー管理</p>
 	</div>
 
-	<div class="flex flex-col items-center justify-center rounded-2xl border border-orange-100 bg-orange-50 py-20">
-		<div class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-rose-500 shadow-lg">
-			<svg class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-				<path stroke-linecap="round" stroke-linejoin="round" d="M22 12h-4l-3 9L9 3l-3 9H2" />
+	<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+		<a
+			href="/workout/weight"
+			class="group flex items-center gap-4 rounded-2xl border border-orange-100 bg-white p-5 shadow-sm transition-all hover:border-orange-200 hover:shadow-md"
+		>
+			<div
+				class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 shadow-md shadow-orange-500/20 transition-transform group-hover:scale-105"
+			>
+				<svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18M3 18h18" />
+				</svg>
+			</div>
+			<div class="min-w-0">
+				<p class="text-sm font-semibold text-gray-800">体重記録</p>
+				<p class="mt-0.5 text-xs text-gray-500">日々の体重・体脂肪率を記録</p>
+			</div>
+			<svg class="ml-auto h-4 w-4 flex-shrink-0 text-gray-300 transition-colors group-hover:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
 			</svg>
-		</div>
-		<p class="text-sm font-medium text-gray-600">近日公開</p>
-		<p class="mt-1 text-xs text-gray-400">この機能は現在開発中です</p>
+		</a>
+
+		<a
+			href="/workout/exercise"
+			class="group flex items-center gap-4 rounded-2xl border border-orange-100 bg-white p-5 shadow-sm transition-all hover:border-orange-200 hover:shadow-md"
+		>
+			<div
+				class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 shadow-md shadow-orange-500/20 transition-transform group-hover:scale-105"
+			>
+				<svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7M15 5l-6 7 6 7" />
+				</svg>
+			</div>
+			<div class="min-w-0">
+				<p class="text-sm font-semibold text-gray-800">種目マスタ</p>
+				<p class="mt-0.5 text-xs text-gray-500">トレーニング種目の登録・管理</p>
+			</div>
+			<svg class="ml-auto h-4 w-4 flex-shrink-0 text-gray-300 transition-colors group-hover:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+			</svg>
+		</a>
+
+		<a
+			href="/workout/log"
+			class="group flex items-center gap-4 rounded-2xl border border-orange-100 bg-white p-5 shadow-sm transition-all hover:border-orange-200 hover:shadow-md"
+		>
+			<div
+				class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 shadow-md shadow-orange-500/20 transition-transform group-hover:scale-105"
+			>
+				<svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2M9 12h6M9 16h6M9 8h6" />
+				</svg>
+			</div>
+			<div class="min-w-0">
+				<p class="text-sm font-semibold text-gray-800">日々の記録</p>
+				<p class="mt-0.5 text-xs text-gray-500">トレーニングのセット・回数を記録</p>
+			</div>
+			<svg class="ml-auto h-4 w-4 flex-shrink-0 text-gray-300 transition-colors group-hover:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+			</svg>
+		</a>
 	</div>
 </div>
