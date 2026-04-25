@@ -88,5 +88,25 @@
 				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
 			</svg>
 		</a>
+
+		<a
+			href="/workout/chart"
+			class="group flex items-center gap-4 rounded-2xl border border-orange-100 bg-white p-5 shadow-sm transition-all hover:border-orange-200 hover:shadow-md"
+		>
+			<div
+				class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 shadow-md shadow-orange-500/20 transition-transform group-hover:scale-105"
+			>
+				<svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+				</svg>
+			</div>
+			<div class="min-w-0">
+				<p class="text-sm font-semibold text-gray-800">グラフ表示</p>
+				<p class="mt-0.5 text-xs text-gray-500">体重・カロリーの推移をグラフで確認</p>
+			</div>
+			<svg class="ml-auto h-4 w-4 flex-shrink-0 text-gray-300 transition-colors group-hover:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+			</svg>
+		</a>
 	</div>
 </div>
