@@ -68,5 +68,25 @@
 				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
 			</svg>
 		</a>
+
+		<a
+			href="/workout/calorie"
+			class="group flex items-center gap-4 rounded-2xl border border-orange-100 bg-white p-5 shadow-sm transition-all hover:border-orange-200 hover:shadow-md"
+		>
+			<div
+				class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 shadow-md shadow-orange-500/20 transition-transform group-hover:scale-105"
+			>
+				<svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+				</svg>
+			</div>
+			<div class="min-w-0">
+				<p class="text-sm font-semibold text-gray-800">摂取カロリー記録</p>
+				<p class="mt-0.5 text-xs text-gray-500">日々の摂取カロリーを記録</p>
+			</div>
+			<svg class="ml-auto h-4 w-4 flex-shrink-0 text-gray-300 transition-colors group-hover:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+			</svg>
+		</a>
 	</div>
 </div>

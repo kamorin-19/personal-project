@@ -1,3 +1,53 @@
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	import type { ExerciseResponse, WorkoutLogResponse } from '$lib/api/generated/types.gen';
+	import type { PageData, ActionData } from './$types';
+
+	let { data, form }: { data: PageData; form: ActionData } = $props();
+
+	let exercises = $derived((data?.exercises ?? []) as ExerciseResponse[]);
+	let logs = $derived((data?.logs ?? []) as WorkoutLogResponse[]);
+	let submitting = $state(false);
+
+	const muscleGroupLabel: Record<string, string> = {
+		chest: '胸',
+		back: '背中',
+		shoulder: '肩',
+		arm: '腕',
+		abdomen: '腹',
+		leg: '脚',
+		other: 'その他'
+	};
+
+	const muscleGroupOrder = ['chest', 'back', 'shoulder', 'arm', 'abdomen', 'leg', 'other'];
+
+	type ExerciseGroup = { group: string; label: string; items: ExerciseResponse[] };
+
+	let exerciseGroups = $derived(
+		muscleGroupOrder
+			.map((group) => ({
+				group,
+				label: muscleGroupLabel[group] ?? group,
+				items: exercises.filter((e) => e.muscle_group === group)
+			}))
+			.filter((g): g is ExerciseGroup => g.items.length > 0)
+	);
+
+	let selectedExerciseId = $state('');
+	let selectedExerciseName = $state('');
+
+	function onExerciseChange(e: Event) {
+		const select = e.currentTarget as HTMLSelectElement;
+		const option = select.selectedOptions[0];
+		selectedExerciseId = option?.value ?? '';
+		selectedExerciseName = option?.dataset.name ?? '';
+	}
+
+	function formatSets(sets: number[]): string {
+		return sets.join(', ') + ' 回';
+	}
+</script>
+
 <svelte:head>
 	<title>日々の記録 — Personal Manager</title>
 </svelte:head>
@@ -18,51 +68,79 @@
 	</div>
 
 	<div class="max-w-lg">
+		<!-- 入力フォーム -->
 		<div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-			<form>
+			{#if form?.error}
+				<div
+					class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+					role="alert"
+				>
+					{form.error}
+				</div>
+			{/if}
+
+			{#if form?.success}
+				<div
+					class="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+					role="status"
+				>
+					登録しました
+				</div>
+			{/if}
+
+			<form
+				method="POST"
+				action="?/create"
+				use:enhance={() => {
+					submitting = true;
+					return async ({ update }) => {
+						await update();
+						submitting = false;
+					};
+				}}
+			>
+				<input type="hidden" name="exercise_id" value={selectedExerciseId} />
+				<input type="hidden" name="exercise_name" value={selectedExerciseName} />
+
 				<div class="space-y-5">
 					<!-- 日付 -->
 					<div>
 						<label for="log-date" class="block text-sm font-medium text-gray-700">日付</label>
 						<input
 							id="log-date"
+							name="record_date"
 							type="date"
+							required
 							class="mt-1.5 block w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm transition-colors focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20"
 						/>
 					</div>
 
 					<!-- 種目名 -->
 					<div>
-						<label for="exercise-name" class="block text-sm font-medium text-gray-700">種目名</label>
-						<select
-							id="exercise-name"
-							class="mt-1.5 block w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm transition-colors focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20"
-						>
-							<option value="" disabled selected>種目を選択してください</option>
-							<optgroup label="胸">
-								<option value="bench-press">ベンチプレス</option>
-								<option value="incline-bench-press">インクラインベンチプレス</option>
-								<option value="dumbbell-fly">ダンベルフライ</option>
-							</optgroup>
-							<optgroup label="背中">
-								<option value="deadlift">デッドリフト</option>
-								<option value="barbell-row">バーベルロウ</option>
-								<option value="lat-pulldown">ラットプルダウン</option>
-							</optgroup>
-							<optgroup label="肩">
-								<option value="overhead-press">オーバーヘッドプレス</option>
-								<option value="lateral-raise">サイドレイズ</option>
-							</optgroup>
-							<optgroup label="腕">
-								<option value="barbell-curl">バーベルカール</option>
-								<option value="triceps-pushdown">トライセプスプッシュダウン</option>
-							</optgroup>
-							<optgroup label="脚">
-								<option value="squat">スクワット</option>
-								<option value="leg-press">レッグプレス</option>
-								<option value="leg-curl">レッグカール</option>
-							</optgroup>
-						</select>
+						<label for="exercise-select" class="block text-sm font-medium text-gray-700">種目名</label>
+						{#if exercises.length === 0}
+							<p class="mt-1.5 text-sm text-gray-400">
+								種目が登録されていません。<a href="/workout/exercise" class="text-orange-500 underline hover:text-orange-600">種目マスタ</a>から登録してください。
+							</p>
+						{:else}
+							<select
+								id="exercise-select"
+								required
+								onchange={onExerciseChange}
+								class="mt-1.5 block w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm transition-colors focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400/20"
+							>
+								<option value="" disabled selected>種目を選択してください</option>
+								{#each exerciseGroups as group (group.group)}
+									<optgroup label={group.label}>
+										{#each group.items as exercise (exercise.exercise_id)}
+											<option value={exercise.exercise_id} data-name={exercise.name}>
+												{exercise.name}
+											</option>
+										{/each}
+									</optgroup>
+								{/each}
+							</select>
+						{/if}
 					</div>
 
 					<!-- 重量 -->
@@ -71,6 +149,7 @@
 						<div class="relative mt-1.5">
 							<input
 								id="weight"
+								name="weight_kg"
 								type="number"
 								inputmode="decimal"
 								min="0"
@@ -99,6 +178,7 @@
 									<div class="relative w-full">
 										<input
 											id="set-{i + 1}"
+											name="set_{i + 1}"
 											type="number"
 											inputmode="numeric"
 											min="0"
@@ -119,9 +199,10 @@
 				<div class="mt-7 flex gap-3">
 					<button
 						type="submit"
-						class="flex-1 rounded-xl bg-gradient-to-r from-orange-400 to-rose-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-orange-500/20 transition-all hover:from-orange-500 hover:to-rose-600 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 active:scale-[0.98]"
+						disabled={submitting}
+						class="flex-1 rounded-xl bg-gradient-to-r from-orange-400 to-rose-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-orange-500/20 transition-all hover:from-orange-500 hover:to-rose-600 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 active:scale-[0.98] disabled:opacity-50"
 					>
-						登録
+						{submitting ? '登録中…' : '登録'}
 					</button>
 					<button
 						type="reset"
@@ -132,5 +213,49 @@
 				</div>
 			</form>
 		</div>
+
+		<!-- 記録一覧 -->
+		{#if logs.length > 0}
+			<div class="mt-8">
+				<h2 class="mb-4 text-lg font-semibold text-gray-800">記録一覧</h2>
+				<ul class="space-y-3">
+					{#each logs as log (log.log_id)}
+						<li class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+							<div class="flex items-start justify-between gap-3">
+								<div class="min-w-0 flex-1">
+									<div class="flex flex-wrap items-center gap-2">
+										<span class="text-sm font-semibold text-gray-900">{log.exercise_name}</span>
+										<span class="text-xs text-gray-400">{log.record_date}</span>
+									</div>
+									<div class="mt-1 text-sm text-gray-600">
+										{#if log.weight_kg !== null}
+											<span class="mr-3">{log.weight_kg} kg</span>
+										{/if}
+										<span>{log.sets.length}セット：{formatSets(log.sets)}</span>
+									</div>
+								</div>
+								<form
+									method="POST"
+									action="?/delete"
+									use:enhance={() => {
+										return async ({ update }) => {
+											await update();
+										};
+									}}
+								>
+									<input type="hidden" name="log_id" value={log.log_id} />
+									<button
+										type="submit"
+										class="shrink-0 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-100 hover:text-red-700"
+									>
+										削除
+									</button>
+								</form>
+							</div>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 	</div>
 </div>

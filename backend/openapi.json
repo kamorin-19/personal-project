@@ -311,6 +311,204 @@
         }
       }
     },
+    "/workout/calorie": {
+      "post": {
+        "tags": ["workout"],
+        "summary": "Upsert Calorie",
+        "operationId": "upsert_calorie_workout_calorie_post",
+        "security": [{"HTTPBearer": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/CalorieLogCreate"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/CalorieLogResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["workout"],
+        "summary": "List Calorie",
+        "operationId": "list_calorie_workout_calorie_get",
+        "security": [{"HTTPBearer": []}],
+        "parameters": [
+          {
+            "name": "from_date",
+            "in": "query",
+            "required": false,
+            "schema": {"anyOf": [{"type": "string"}, {"type": "null"}], "title": "From Date"}
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "schema": {"anyOf": [{"type": "string"}, {"type": "null"}], "title": "To Date"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/CalorieLogListResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workout/calorie/{record_date}": {
+      "delete": {
+        "tags": ["workout"],
+        "summary": "Delete Calorie",
+        "operationId": "delete_calorie_workout_calorie__record_date__delete",
+        "security": [{"HTTPBearer": []}],
+        "parameters": [
+          {
+            "name": "record_date",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string", "title": "Record Date"}
+          }
+        ],
+        "responses": {
+          "204": {"description": "Successful Response"},
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workout/log": {
+      "post": {
+        "tags": ["workout"],
+        "summary": "Create Log",
+        "operationId": "create_log_workout_log_post",
+        "security": [{"HTTPBearer": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/WorkoutLogCreate"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/WorkoutLogResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["workout"],
+        "summary": "List Logs",
+        "operationId": "list_logs_workout_log_get",
+        "security": [{"HTTPBearer": []}],
+        "parameters": [
+          {
+            "name": "from_date",
+            "in": "query",
+            "required": false,
+            "schema": {"anyOf": [{"type": "string"}, {"type": "null"}], "title": "From Date"}
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "required": false,
+            "schema": {"anyOf": [{"type": "string"}, {"type": "null"}], "title": "To Date"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/WorkoutLogListResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workout/log/{log_id}": {
+      "delete": {
+        "tags": ["workout"],
+        "summary": "Delete Log",
+        "operationId": "delete_log_workout_log__log_id__delete",
+        "security": [{"HTTPBearer": []}],
+        "parameters": [
+          {
+            "name": "log_id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string", "title": "Log Id"}
+          }
+        ],
+        "responses": {
+          "204": {"description": "Successful Response"},
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HTTPValidationError"}
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
@@ -516,6 +714,118 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "CalorieLogCreate": {
+        "properties": {
+          "record_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "title": "Record Date"
+          },
+          "calories": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99999,
+            "title": "Calories"
+          }
+        },
+        "type": "object",
+        "required": ["record_date", "calories"],
+        "title": "CalorieLogCreate"
+      },
+      "CalorieLogResponse": {
+        "properties": {
+          "record_date": {"type": "string", "title": "Record Date"},
+          "calories": {"type": "integer", "title": "Calories"},
+          "created_at": {"type": "string", "title": "Created At"},
+          "updated_at": {"type": "string", "title": "Updated At"}
+        },
+        "type": "object",
+        "required": ["record_date", "calories", "created_at", "updated_at"],
+        "title": "CalorieLogResponse"
+      },
+      "CalorieLogListResponse": {
+        "properties": {
+          "items": {
+            "items": {"$ref": "#/components/schemas/CalorieLogResponse"},
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": ["items"],
+        "title": "CalorieLogListResponse"
+      },
+      "WorkoutLogCreate": {
+        "properties": {
+          "record_date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "title": "Record Date"
+          },
+          "exercise_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Exercise Id"
+          },
+          "exercise_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "title": "Exercise Name"
+          },
+          "weight_kg": {
+            "anyOf": [
+              {"type": "number", "minimum": 0.0, "maximum": 999.0},
+              {"type": "null"}
+            ],
+            "title": "Weight Kg"
+          },
+          "sets": {
+            "type": "array",
+            "items": {"type": "integer"},
+            "minItems": 1,
+            "maxItems": 10,
+            "title": "Sets"
+          }
+        },
+        "type": "object",
+        "required": ["record_date", "exercise_id", "exercise_name", "sets"],
+        "title": "WorkoutLogCreate"
+      },
+      "WorkoutLogResponse": {
+        "properties": {
+          "log_id": {"type": "string", "title": "Log Id"},
+          "record_date": {"type": "string", "title": "Record Date"},
+          "exercise_id": {"type": "string", "title": "Exercise Id"},
+          "exercise_name": {"type": "string", "title": "Exercise Name"},
+          "weight_kg": {
+            "anyOf": [{"type": "number"}, {"type": "null"}],
+            "title": "Weight Kg"
+          },
+          "sets": {
+            "type": "array",
+            "items": {"type": "integer"},
+            "title": "Sets"
+          },
+          "created_at": {"type": "string", "title": "Created At"},
+          "updated_at": {"type": "string", "title": "Updated At"}
+        },
+        "type": "object",
+        "required": ["log_id", "record_date", "exercise_id", "exercise_name", "weight_kg", "sets", "created_at", "updated_at"],
+        "title": "WorkoutLogResponse"
+      },
+      "WorkoutLogListResponse": {
+        "properties": {
+          "items": {
+            "items": {"$ref": "#/components/schemas/WorkoutLogResponse"},
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": ["items"],
+        "title": "WorkoutLogListResponse"
       },
       "WeightRecordCreate": {
         "properties": {

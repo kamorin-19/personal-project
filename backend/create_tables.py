@@ -27,6 +27,42 @@ TABLES = [
         ],
         "BillingMode": "PAY_PER_REQUEST",
     },
+    {
+        "TableName": "exercises",
+        "KeySchema": [
+            {"AttributeName": "userId", "KeyType": "HASH"},
+            {"AttributeName": "exerciseId", "KeyType": "RANGE"},
+        ],
+        "AttributeDefinitions": [
+            {"AttributeName": "userId", "AttributeType": "S"},
+            {"AttributeName": "exerciseId", "AttributeType": "S"},
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+    },
+    {
+        "TableName": "workout_logs",
+        "KeySchema": [
+            {"AttributeName": "userId", "KeyType": "HASH"},
+            {"AttributeName": "logId", "KeyType": "RANGE"},
+        ],
+        "AttributeDefinitions": [
+            {"AttributeName": "userId", "AttributeType": "S"},
+            {"AttributeName": "logId", "AttributeType": "S"},
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+    },
+    {
+        "TableName": "calorie_logs",
+        "KeySchema": [
+            {"AttributeName": "userId", "KeyType": "HASH"},
+            {"AttributeName": "recordDate", "KeyType": "RANGE"},
+        ],
+        "AttributeDefinitions": [
+            {"AttributeName": "userId", "AttributeType": "S"},
+            {"AttributeName": "recordDate", "AttributeType": "S"},
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+    },
 ]
 
 

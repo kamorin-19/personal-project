@@ -47,6 +47,45 @@ export type ValidationError = {
   type: string;
 };
 
+export type CalorieLogCreate = {
+  record_date: string;
+  calories: number;
+};
+
+export type CalorieLogResponse = {
+  record_date: string;
+  calories: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CalorieLogListResponse = {
+  items: Array<CalorieLogResponse>;
+};
+
+export type WorkoutLogCreate = {
+  record_date: string;
+  exercise_id: string;
+  exercise_name: string;
+  weight_kg?: number | null;
+  sets: Array<number>;
+};
+
+export type WorkoutLogResponse = {
+  log_id: string;
+  record_date: string;
+  exercise_id: string;
+  exercise_name: string;
+  weight_kg: number | null;
+  sets: Array<number>;
+  created_at: string;
+  updated_at: string;
+};
+
+export type WorkoutLogListResponse = {
+  items: Array<WorkoutLogResponse>;
+};
+
 export type WeightRecordCreate = {
   record_date: string;
   weight_kg: number;
@@ -125,6 +164,64 @@ export type DeleteExerciseWorkoutExerciseExerciseIdDeleteResponse = void;
 
 export type DeleteExerciseWorkoutExerciseExerciseIdDeleteError =
   HTTPValidationError;
+
+export type UpsertCalorieWorkoutCaloriePostData = {
+  body: CalorieLogCreate;
+};
+
+export type UpsertCalorieWorkoutCaloriePostResponse = CalorieLogResponse;
+
+export type UpsertCalorieWorkoutCaloriePostError = HTTPValidationError;
+
+export type ListCalorieWorkoutCalorieGetData = {
+  query?: {
+    from_date?: string | null;
+    to_date?: string | null;
+  };
+};
+
+export type ListCalorieWorkoutCalorieGetResponse = CalorieLogListResponse;
+
+export type ListCalorieWorkoutCalorieGetError = HTTPValidationError;
+
+export type DeleteCalorieWorkoutCalorieRecordDateDeleteData = {
+  path: {
+    record_date: string;
+  };
+};
+
+export type DeleteCalorieWorkoutCalorieRecordDateDeleteResponse = void;
+
+export type DeleteCalorieWorkoutCalorieRecordDateDeleteError = HTTPValidationError;
+
+export type CreateLogWorkoutLogPostData = {
+  body: WorkoutLogCreate;
+};
+
+export type CreateLogWorkoutLogPostResponse = WorkoutLogResponse;
+
+export type CreateLogWorkoutLogPostError = HTTPValidationError;
+
+export type ListLogsWorkoutLogGetData = {
+  query?: {
+    from_date?: string | null;
+    to_date?: string | null;
+  };
+};
+
+export type ListLogsWorkoutLogGetResponse = WorkoutLogListResponse;
+
+export type ListLogsWorkoutLogGetError = HTTPValidationError;
+
+export type DeleteLogWorkoutLogLogIdDeleteData = {
+  path: {
+    log_id: string;
+  };
+};
+
+export type DeleteLogWorkoutLogLogIdDeleteResponse = void;
+
+export type DeleteLogWorkoutLogLogIdDeleteError = HTTPValidationError;
 
 export type HealthHealthGetResponse = {
   [key: string]: string;

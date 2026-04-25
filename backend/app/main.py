@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import auth, exercise, weight
+from app.routers import auth, calorie_log, exercise, weight, workout_log
 
 app = FastAPI(
     title="Personal Project API",
@@ -21,6 +21,8 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(weight.router)
 app.include_router(exercise.router)
+app.include_router(workout_log.router)
+app.include_router(calorie_log.router)
 
 
 @app.get("/health")

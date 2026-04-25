@@ -46,6 +46,37 @@ SAMPLE_EXERCISE_ITEM_NO_CALORIES = {
     "updatedAt": "2026-04-25T00:00:00+00:00",
 }
 
+SAMPLE_WORKOUT_LOG_ITEM = {
+    "userId": "user-001",
+    "logId": "log-uuid-001",
+    "recordDate": "2026-04-25",
+    "exerciseId": "ex-uuid-001",
+    "exerciseName": "ベンチプレス",
+    "weightKg": Decimal("80.0"),
+    "sets": [10, 8, 6],
+    "createdAt": "2026-04-25T00:00:00+00:00",
+    "updatedAt": "2026-04-25T00:00:00+00:00",
+}
+
+SAMPLE_WORKOUT_LOG_ITEM_NO_WEIGHT = {
+    "userId": "user-001",
+    "logId": "log-uuid-002",
+    "recordDate": "2026-04-25",
+    "exerciseId": "ex-uuid-002",
+    "exerciseName": "プッシュアップ",
+    "sets": [15, 12, 10],
+    "createdAt": "2026-04-25T00:00:00+00:00",
+    "updatedAt": "2026-04-25T00:00:00+00:00",
+}
+
+SAMPLE_CALORIE_LOG_ITEM = {
+    "userId": "user-001",
+    "recordDate": "2026-04-25",
+    "calories": Decimal("2000"),
+    "createdAt": "2026-04-25T00:00:00+00:00",
+    "updatedAt": "2026-04-25T00:00:00+00:00",
+}
+
 
 @pytest.fixture
 def mock_table() -> AsyncMock:
