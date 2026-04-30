@@ -1,31 +1,21 @@
 import { fail } from '@sveltejs/kit';
-import { BACKEND_URL } from '$env/static/private';
+import { serverApiFetch } from '$lib/api/client';
 import type { WeightRecordResponse } from '$lib/api/generated/types.gen';
 import type { Actions, PageServerLoad } from './$types';
-
-function backendUrl(path: string) {
-	return `${BACKEND_URL}${path}`;
-}
-
-function authHeaders(token: string): Record<string, string> {
-	return {
-		'Content-Type': 'application/json',
-		Authorization: `Bearer ${token}`
-	};
-}
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const token = cookies.get('session');
 	if (!token) return { records: [] as WeightRecordResponse[] };
 
-	const res = await fetch(backendUrl('/workout/weight'), {
-		headers: authHeaders(token)
-	});
-
-	if (!res.ok) return { records: [] as WeightRecordResponse[] };
-
-	const data = (await res.json()) as { items: WeightRecordResponse[] };
-	return { records: data.items };
+	try {
+		const data = await serverApiFetch<{ items: WeightRecordResponse[] }>(
+			'/workout/weight',
+			token
+		);
+		return { records: data.items };
+	} catch {
+		return { records: [] as WeightRecordResponse[] };
+	}
 };
 
 export const actions: Actions = {
@@ -45,15 +35,13 @@ export const actions: Actions = {
 		const weight_kg = parseFloat(weight_kg_str);
 		const body_fat_pct = body_fat_pct_str ? parseFloat(body_fat_pct_str) : null;
 
-		const res = await fetch(backendUrl('/workout/weight'), {
-			method: 'POST',
-			headers: authHeaders(token),
-			body: JSON.stringify({ record_date, weight_kg, body_fat_pct })
-		});
-
-		if (!res.ok) {
-			const errorText = await res.text().catch(() => '登録に失敗しました');
-			return fail(res.status, { error: errorText });
+		try {
+			await serverApiFetch<unknown>('/workout/weight', token, {
+				method: 'POST',
+				body: JSON.stringify({ record_date, weight_kg, body_fat_pct })
+			});
+		} catch (e) {
+			return fail(500, { error: e instanceof Error ? e.message : '登録に失敗しました' });
 		}
 
 		return { success: true };
@@ -66,14 +54,13 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const record_date = formData.get('record_date') as string;
 
-		const res = await fetch(backendUrl(`/workout/weight/${record_date}`), {
-			method: 'DELETE',
-			headers: authHeaders(token)
-		});
-
-		if (!res.ok && res.status !== 404) {
-			const errorText = await res.text().catch(() => '削除に失敗しました');
-			return fail(res.status, { error: errorText });
+		try {
+			await serverApiFetch<unknown>(`/workout/weight/${record_date}`, token, {
+				method: 'DELETE'
+			});
+		} catch (e) {
+			const msg = e instanceof Error ? e.message : '削除に失敗しました';
+			if (!msg.includes('404')) return fail(500, { error: msg });
 		}
 
 		return { success: true };

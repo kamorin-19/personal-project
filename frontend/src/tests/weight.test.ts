@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vitest';
-import Page from './+page.svelte';
+import Page from '../routes/(app)/workout/weight/+page.svelte';
 
 describe('体重記録ページ', () => {
 	it('ページタイトルが表示される', () => {

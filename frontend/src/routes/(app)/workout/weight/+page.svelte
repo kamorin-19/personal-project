@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { WeightRecordResponse } from '$lib/api/generated/types.gen';
 	import type { PageData, ActionData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
-	let records = $derived((data?.records ?? []) as WeightRecordResponse[]);
+	let records = $derived(data?.records ?? []);
 	let submitting = $state(false);
 </script>
 
