@@ -49,8 +49,24 @@ c:/personal-project/
 - 超過する場合は要点を絞って圧縮すること
 - 出力完了後はファイルパスのみを返す（内容は返さない）
 
+### 返却ファイルフォーマット
+
+```md
+## STATUS
+COMPLETE / ERROR / NEEDS_REVIEW / RATE_LIMITED のいずれか
+
+## SUMMARY
+3行以内で結果を要約
+
+## OUTPUT_FILES
+生成・変更したファイルの絶対パス一覧のみ
+
+## ISSUES
+（STATUS が ERROR または NEEDS_REVIEW の場合のみ）問題点を箇条書き
+```
+
 ### index管理
-- 同日に複数回実行する場合、既存ファイル数+1でインクリメント
+同日・同出力先ディレクトリ内の `{yyyymmdd}-*.md` の最大index + 1 でインクリメントする。
 
 ### --all-files の使用方針
 - コードベース全体が必要な場合（レビュー・全体把握）: `--all-files` を使用
@@ -77,17 +93,7 @@ c:/personal-project/
 
 ## コーディング規約
 
-### フロントエンド (TypeScript / Svelte)
-- `strict: true`、`any` 型禁止
-- Svelte 5 Runes (`$state`, `$derived`, `$effect`) を使用、Svelte 4 store は使わない
-- `default export` は使わない（named export のみ）
-- コンポーネント名・ファイル名は PascalCase
-
-### バックエンド (Python / FastAPI)
-- PEP 8 準拠
-- 全関数引数・戻り値に型ヒント必須
-- 変数・関数は snake_case、クラスは PascalCase
-- リクエスト/レスポンスは Pydantic モデルで定義
+CLAUDE.mdのコーディング規約に準拠すること。
 
 ## 注意事項
 - `.env` ファイルは読み込まない・出力に含めない
