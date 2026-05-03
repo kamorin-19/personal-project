@@ -8,7 +8,7 @@
 	let exercises = $derived((data?.exercises ?? []) as ExerciseResponse[]);
 	let submitting = $state(false);
 
-	const muscleGroupLabel: Record<string, string> = {
+	const MUSCLE_GROUPS: Record<string, string> = {
 		chest: '胸',
 		back: '背中',
 		shoulder: '肩',
@@ -157,7 +157,7 @@
 							<div>
 								<p class="text-sm font-medium text-gray-900">{exercise.name}</p>
 								<p class="mt-0.5 text-xs text-gray-500">
-									{muscleGroupLabel[exercise.muscle_group] ?? exercise.muscle_group}
+									{MUSCLE_GROUPS[exercise.muscle_group] ?? exercise.muscle_group}
 									{#if exercise.calories_per_rep_per_kg !== null}
 										・{exercise.calories_per_rep_per_kg} kcal/rep/kg
 									{/if}

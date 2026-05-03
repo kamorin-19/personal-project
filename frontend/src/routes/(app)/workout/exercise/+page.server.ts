@@ -1,31 +1,21 @@
 import { fail } from '@sveltejs/kit';
-import { BACKEND_URL } from '$env/static/private';
+import { serverApiFetch } from '$lib/api/client';
 import type { ExerciseResponse } from '$lib/api/generated/types.gen';
 import type { Actions, PageServerLoad } from './$types';
-
-function backendUrl(path: string) {
-	return `${BACKEND_URL}${path}`;
-}
-
-function authHeaders(token: string): Record<string, string> {
-	return {
-		'Content-Type': 'application/json',
-		Authorization: `Bearer ${token}`
-	};
-}
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const token = cookies.get('session');
 	if (!token) return { exercises: [] as ExerciseResponse[] };
 
-	const res = await fetch(backendUrl('/workout/exercise'), {
-		headers: authHeaders(token)
-	});
-
-	if (!res.ok) return { exercises: [] as ExerciseResponse[] };
-
-	const data = (await res.json()) as { items: ExerciseResponse[] };
-	return { exercises: data.items };
+	try {
+		const data = await serverApiFetch<{ items: ExerciseResponse[] }>(
+			'/workout/exercise',
+			token
+		);
+		return { exercises: data.items };
+	} catch (err) {
+		return { exercises: [] as ExerciseResponse[] };
+	}
 };
 
 export const actions: Actions = {
@@ -42,20 +32,24 @@ export const actions: Actions = {
 			return fail(400, { error: '種目名と部位は必須です' });
 		}
 
-		const calories_per_rep_per_kg = calories_str ? parseFloat(calories_str) : null;
+		const calories_per_rep_per_kg = calories_str && !isNaN(parseFloat(calories_str))
+			? parseFloat(calories_str)
+			: null;
 
-		const res = await fetch(backendUrl('/workout/exercise'), {
-			method: 'POST',
-			headers: authHeaders(token),
-			body: JSON.stringify({ name, muscle_group, calories_per_rep_per_kg })
-		});
-
-		if (!res.ok) {
-			const errorText = await res.text().catch(() => '登録に失敗しました');
-			return fail(res.status, { error: errorText });
+		try {
+			await serverApiFetch<ExerciseResponse>(
+				'/workout/exercise',
+				token,
+				{
+					method: 'POST',
+					body: JSON.stringify({ name, muscle_group, calories_per_rep_per_kg })
+				}
+			);
+			return { success: true };
+		} catch (err) {
+			const errorMsg = err instanceof Error ? err.message : '登録に失敗しました';
+			return fail(400, { error: errorMsg });
 		}
-
-		return { success: true };
 	},
 
 	delete: async ({ request, cookies }) => {
@@ -65,16 +59,20 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const exercise_id = formData.get('exercise_id') as string;
 
-		const res = await fetch(backendUrl(`/workout/exercise/${exercise_id}`), {
-			method: 'DELETE',
-			headers: authHeaders(token)
-		});
-
-		if (!res.ok && res.status !== 404) {
-			const errorText = await res.text().catch(() => '削除に失敗しました');
-			return fail(res.status, { error: errorText });
+		try {
+			await serverApiFetch<void>(
+				`/workout/exercise/${exercise_id}`,
+				token,
+				{ method: 'DELETE' }
+			);
+			return { success: true };
+		} catch (err) {
+			const errorMsg = err instanceof Error ? err.message : '削除に失敗しました';
+			// 404エラーは成功と同等に扱う
+			if (errorMsg.includes('404')) {
+				return { success: true };
+			}
+			return fail(400, { error: errorMsg });
 		}
-
-		return { success: true };
 	}
 };
