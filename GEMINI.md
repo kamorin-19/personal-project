@@ -34,7 +34,8 @@ c:/personal-project/
 │   └── tests/               # pytest テスト
 └── interface/
     ├── claude_to_gemini/    # Claude Code → Gemini CLI 指示ファイル
-    └── gemini_to_claude/    # Gemini CLI → Claude Code 出力ファイル
+    ├── gemini_to_claude/    # Gemini CLI → Claude Code 出力ファイル
+    └── gemini_to_codex/     # Gemini CLI → Codex CLI 指示ファイル（簡易リファクタ委任）
 ```
 
 ## Gemini CLIへの出力ルール
@@ -42,7 +43,11 @@ c:/personal-project/
 ### ファイルパス
 - **必ず絶対パスを使用する**（相対パス禁止）
 - 作業ディレクトリ: `c:/personal-project`
-- 出力先: `c:/personal-project/interface/gemini_to_claude/{yyyymmdd}/{yyyymmdd}-{index}.md`
+
+| 出力先 | パス | 用途 |
+|---|---|---|
+| Claude Code への報告（常時） | `c:/personal-project/interface/gemini_to_claude/{yyyymmdd}/{yyyymmdd}-{index}.md` | 全タスクの返却 |
+| Codex CLI への委任（簡易リファクタのみ） | `c:/personal-project/interface/gemini_to_codex/{yyyymmdd}/{yyyymmdd}-{index}.md` | Codex向け指示テンプレート形式で出力 |
 
 ### 出力形式
 - **200行以内**のMarkdown形式（厳守）
@@ -91,9 +96,35 @@ COMPLETE / ERROR / NEEDS_REVIEW / RATE_LIMITED のいずれか
 - API仕様書・設計書・READMEなどの生成
 - 読み手を意識した構成・表現で作成
 
-## コーディング規約
+### gemini-refactoring（リファクタリングアセスメント）
+- コードベース全体から改善箇所を特定し難易度を判定する
+- `--all-files` を使用してコードベース全体を解析
+- 難易度判定基準:
+  - **簡易**: 変更ファイル ≤3・新規ロジックなし・セキュリティ/DB/APIスキーマに無関係
+  - **複雑**: 変更ファイル ≥4・ロジック変更あり・セキュリティ/DB/APIスキーマ関係・複数領域横断
+- 簡易の場合: `gemini_to_codex/` に Codex向け指示テンプレート形式で実装指示を出力 → Codex が `codex_to_claude/` に完了報告を出力するまで待機 → 確認後 `gemini_to_claude/` に COMPLETE で報告（OUTPUT_FILES に codex_to_claude のパスを含める）
+- 複雑の場合: `gemini_to_claude/` に NEEDS_REVIEW で報告
 
-CLAUDE.mdのコーディング規約に準拠すること。
+## 指示ファイルテンプレート（受け取り形式）
+
+`claude_to_gemini/` への指示ファイルは以下の構造で記述される。
+
+```md
+## 調査テーマ
+## 前提
+## 知りたいこと
+## 出力形式
+```
+
+## コーディング規約参照
+
+各領域の規約ファイルに準拠すること。
+
+| 領域 | 参照先 |
+|---|---|
+| フロントエンド | `frontend/CLAUDE.md` |
+| バックエンド | `backend/CLAUDE.md` |
+| インフラ・横断設定 | `docs/common.md` |
 
 ## 注意事項
 - `.env` ファイルは読み込まない・出力に含めない

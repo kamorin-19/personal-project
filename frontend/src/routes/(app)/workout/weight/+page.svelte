@@ -4,7 +4,7 @@
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
-	let records = $derived(data?.records ?? []);
+	let records = $derived(data.records);
 	let submitting = $state(false);
 </script>
 
@@ -165,11 +165,7 @@
 							<form
 								method="POST"
 								action="?/delete"
-								use:enhance={() => {
-									return async ({ update }) => {
-										await update();
-									};
-								}}
+								use:enhance
 							>
 								<input type="hidden" name="record_date" value={record.record_date} />
 								<button

@@ -33,7 +33,14 @@ export const actions: Actions = {
 		}
 
 		const weight_kg = parseFloat(weight_kg_str);
+		if (isNaN(weight_kg) || weight_kg <= 0) {
+			return fail(400, { error: '体重の値が不正です' });
+		}
+
 		const body_fat_pct = body_fat_pct_str ? parseFloat(body_fat_pct_str) : null;
+		if (body_fat_pct !== null && (isNaN(body_fat_pct) || body_fat_pct < 0)) {
+			return fail(400, { error: '体脂肪率の値が不正です' });
+		}
 
 		try {
 			await serverApiFetch<unknown>('/workout/weight', token, {
